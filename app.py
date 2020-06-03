@@ -1,3 +1,9 @@
+"""
+
+This is the main application
+
+"""
+
 from os import listdir
 from os.path import isfile, join
 import cv2
@@ -15,14 +21,11 @@ dataset_elder = []
 
 for filename in filename_training_young: 
     path_image = PATH_DATASET_YOUNG + filename
-    # print(image)
     dataset_young.append(cv2.imread(path_image, cv2.IMREAD_GRAYSCALE))
 
-# print(dataset_young)
 
 for filename in filename_training_elder: 
     path_image = PATH_DATASET_ELDER + filename
-    # print(image)
     dataset_elder.append(cv2.imread(path_image, cv2.IMREAD_GRAYSCALE))
 
 
