@@ -39,7 +39,7 @@ def single_image_face_detection(image_path,save_directory):
     for (x, y, w, h) in faces:
 
         crop_img = image[y:y+h, x:x+w]
-        status = cv2.imwrite("{0}/cropped_{1}.jpg".format(save_directory,index_image), crop_img)
+        status = cv2.imwrite("{0}/cropped_{1}.jpg".format(save_directory,faces_count), cv2.resize(crop_img,(400,400)))
         print(status)
 
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -47,7 +47,7 @@ def single_image_face_detection(image_path,save_directory):
         faces_count += 1
 
     if len(faces) != 0: 
-        status = cv2.imwrite('{0}/faces_detected_{1}.jpg'.format(save_directory,index2), image)
+        status = cv2.imwrite('{0}/faces_detected_{1}.jpg'.format(save_directory,image_count), image)
         print("[INFO] Image faces_detected.jpg written to filesystem: ", status)
 
         image_count += 1
