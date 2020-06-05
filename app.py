@@ -18,33 +18,22 @@ Dataset creation
 
 '''
 
-PATH_DATASET_YOUNG = 'train/face-a/'
-PATH_DATASET_ELDER = 'train/face-b/'
+PATH_DATASET = 'train/face-a/'
 
-filename_training_young = [f for f in listdir(PATH_DATASET_YOUNG) if isfile(join(PATH_DATASET_YOUNG, f))]
-filename_training_elder = [f for f in listdir(PATH_DATASET_ELDER) if isfile(join(PATH_DATASET_ELDER, f))]
-
-
-dataset_young = []
-dataset_elder = []
+filename_images = [f for f in listdir(PATH_DATASET) if isfile(join(PATH_DATASET, f))]
 
 dataset_complete = []
 
+#from 0 to 30 label = 0, from 31 to 59 label = 1 
 labels = []
 
-for filename in filename_training_young: 
-    path_image = PATH_DATASET_YOUNG + filename
-    dataset_young.append((cv2.imread(path_image, cv2.IMREAD_GRAYSCALE)))
+for filename in filename_images: 
+    path_image = PATH_DATASET + filename
     dataset_complete.append((cv2.imread(path_image, cv2.IMREAD_GRAYSCALE)))
-    #young = 1 
-    labels.append(1)
+    index = filename.find('A') + 1
+    age = 0 if int(filename[index:index+2]) < 30 else 1  
+    labels.append(age)
 
-for filename in filename_training_elder: 
-    path_image = PATH_DATASET_ELDER + filename
-    dataset_elder.append((cv2.imread(path_image, cv2.IMREAD_GRAYSCALE)))
-    dataset_complete.append((cv2.imread(path_image, cv2.IMREAD_GRAYSCALE)))
-    #elderly = 0
-    labels.append(0)
 ''' 
 
 Image reshape 
@@ -56,29 +45,14 @@ Image reshape
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
 
-row,col = dataset_young[0].shape
-
-len_dataset_young = len(dataset_young)
-data_young = np.zeros((row * col, len_dataset_young))
-
-for i in range(len_dataset_young):
-    data_young[:,i] = np.reshape(dataset_young[i], row * col)
-
-len_dataset_elder = len(dataset_elder)
-data_elder = np.zeros((row * col, len_dataset_elder))
-
-for i in range(len_dataset_elder):
-  data_elder[:,i] = np.reshape(dataset_elder[i], row * col)
-
+row,col = dataset_complete[0].shape
 
 len_dataset_complete = len(dataset_complete)
-data_complete = np.zeros((row * col, len_dataset_complete))
+dataset_reshaped_complete = np.zeros((row * col, len_dataset_complete))
 
 for i in range(len_dataset_complete):
-  data_complete[:,i] = np.reshape(dataset_complete[i], row * col)
+  dataset_reshaped_complete[:,i] = np.reshape(dataset_complete[i], row * col)
 
-
-# print(data_complete.shape)
 
 '''
 
@@ -86,11 +60,13 @@ Divide data in training and testing
 
 '''
 
-training_set = data_complete[:,:400]
-test_set = data_complete[:,400:]
+print(dataset_reshaped_complete.shape)
 
-training_labels = labels[:400]
-test_labels = labels[400:]
+training_set = dataset_reshaped_complete[:,:5000]
+test_set = dataset_reshaped_complete[:,1476:]
+
+training_labels = labels[:5000]
+test_labels = labels[1476:]
 
 
 
@@ -117,26 +93,31 @@ XT_test = np.dot(Xc_test.T, Tr)
 
 # print(XT.shape)
 
-classe1 = np.dot(data_young.T,Tr)
-classe2 = np.dot(data_elder.T,Tr)
+classe1= dataset_reshaped_complete[labels == 0]
+classe2= dataset_reshaped_complete[labels == 1]
 
 print(classe1.shape)
-# print(classe2.shape)                          
 
-m1 = np.mean(classe1, axis=0)
-m2 = np.mean(classe2, axis=0)
+# classe1 = np.dot(classe1.T,Tr)
+# classe2 = np.dot(classe2.T,Tr)
 
-C1 = np.cov(classe1,rowvar=False)
-C2 = np.cov(classe2,rowvar=False)
+# print(classe1.shape)
+# # print(classe2.shape)                          
 
-from scipy.stats import multivariate_normal
+# m1 = np.mean(classe1, axis=0)
+# m2 = np.mean(classe2, axis=0)
 
-lik1 = multivariate_normal.pdf(XT_test, m1, C1)
-lik2 = multivariate_normal.pdf(XT_test, m2, C2)
+# C1 = np.cov(classe1,rowvar=False)
+# C2 = np.cov(classe2,rowvar=False)
 
-loglik = np.log( np.vstack((lik1, lik2)))
-prediction = np.argmax(loglik, axis=0)
+# from scipy.stats import multivariate_normal
 
-accuracy = np.sum(prediction == test_labels)/len(test_labels)
+# lik1 = multivariate_normal.pdf(XT_test, m1, C1)
+# lik2 = multivariate_normal.pdf(XT_test, m2, C2)
 
-print('Accuratezza del classificatore: ' + "{0:.2f}".format(accuracy*100) + "%")
+# loglik = np.log( np.vstack((lik1, lik2)))
+# prediction = np.argmax(loglik, axis=0)
+
+# accuracy = np.sum(prediction == test_labels)/len(test_labels)
+
+# print('Accuratezza del classificatore: ' + "{0:.2f}".format(accuracy*100) + "%")

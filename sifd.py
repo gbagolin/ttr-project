@@ -8,7 +8,7 @@ faces_count = 0 #count the number of faces present in a image
 image_count = 0 #count the number of images computed
 
 
-def single_image_face_detection(image_path,save_directory,images_directory):
+def single_image_face_detection(image_path,save_directory,images_directory,image_name):
     """Takes in input one image, detecs the face if there is any and
         create a new image with the cropped face
 
@@ -33,22 +33,22 @@ def single_image_face_detection(image_path,save_directory,images_directory):
         minSize=(30, 30)
     )
     
-    print("[INFO] Found {0} Faces!".format(len(faces)))
+    #print("[INFO] Found {0} Faces!".format(len(faces)))
 
     #draw a rectangle for each face detected
     for (x, y, w, h) in faces:
 
         crop_img = image[y:y+h, x:x+w]
-        status = cv2.imwrite("{0}/cropped_{1}.jpg".format(save_directory,faces_count), cv2.resize(crop_img,(400,400)))
-        print(status)
+        status = cv2.imwrite("{0}/{1}".format(save_directory,image_name), cv2.resize(crop_img,(200,200)))
+        #print(status)
 
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
         
         faces_count += 1
 
     if len(faces) != 0: 
-        status = cv2.imwrite('{0}/faces_detected_{1}.jpg'.format(images_directory,image_count), image)
-        print("[INFO] Image faces_detected.jpg written to filesystem: ", status)
+        status = cv2.imwrite('{0}/{1}'.format(images_directory,image_name), image)
+        #print("[INFO] Image faces_detected.jpg written to filesystem: ", status)
 
         image_count += 1
 
