@@ -7,6 +7,10 @@ https://www.dropbox.com/s/a0lj1ddd54ns8qy/All-Age-Faces%20Dataset.zip?dl=0
         face-a/
         images/
     
+## Dataset
+
+    1. Copy the images downloaded to folder 'a'. 
+
 ## Run 
     1. Create the dataset: $ python cds.py
     2. Run the app: $ python app.py

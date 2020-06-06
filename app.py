@@ -73,13 +73,19 @@ training_labels = labels[:5000]
 test_labels = labels[5000:]
 
 
+print("Training_set.shape ", training_set.shape)
+
 '''
 
 PCA 
 
 '''
 
-XT,Tr,media = getFeatures(training_set,0.9)
+tmp = np.array([training_set[0]])
+
+print(tmp.shape)
+
+XT,Tr,media = getFeatures(tmp,0.9)
 
 '''
 
@@ -95,6 +101,8 @@ BAYES
 
 classe1 = dataset_reshaped_complete[labels == 0, :]
 classe2 = dataset_reshaped_complete[labels == 1, :]
+
+
 
 # classe1 = np.dot(classe1,Tr)
 # classe2 = np.dot(classe2,Tr)
