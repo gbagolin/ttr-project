@@ -34,25 +34,29 @@ for filename in filename_images:
     age = 0 if int(filename[index:index+2]) < 30 else 1  
     labels.append(age)
 
+labels = np.array(labels)
+
 ''' 
 
 Image reshape 
 
 '''
 
-# image = dataset_young[0]
+# image = dataset_complete[2]
 # cv2.imshow('img', image)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
 
+
 row,col = dataset_complete[0].shape
 
 len_dataset_complete = len(dataset_complete)
-dataset_reshaped_complete = np.zeros((row * col, len_dataset_complete))
+dataset_reshaped_complete = np.zeros((len_dataset_complete, row * col))
 
-for i in range(len_dataset_complete):
-  dataset_reshaped_complete[:,i] = np.reshape(dataset_complete[i], row * col)
+# for i in range(len_dataset_complete):
+#   dataset_reshaped_complete[i,:] = np.reshape(dataset_complete[i], (len_dataset_complete, row * col))
 
+dataset_reshaped_complete = np.reshape(dataset_complete, (len_dataset_complete,row*col))
 
 '''
 
@@ -60,18 +64,14 @@ Divide data in training and testing
 
 '''
 
-print(dataset_reshaped_complete.shape)
+print("dataset_reshaped_complete.shape " , dataset_reshaped_complete.shape )
 
-training_set = dataset_reshaped_complete[:,:5000]
-test_set = dataset_reshaped_complete[:,1476:]
+training_set = dataset_reshaped_complete[:5000,:]
+test_set = dataset_reshaped_complete[5000:,:]
 
 training_labels = labels[:5000]
-test_labels = labels[1476:]
+test_labels = labels[5000:]
 
-
-
-# print(training_set.shape)
-# print(test_set.shape)
 
 '''
 
@@ -87,22 +87,20 @@ BAYES
 
 '''
 
-Xc_test = test_set - media[:,np.newaxis]
+# Xc_test = test_set - media[:,np.newaxis]
 
-XT_test = np.dot(Xc_test.T, Tr)
+# XT_test = np.dot(Xc_test, Tr)
 
-# print(XT.shape)
+# print("XT.shape: ", XT.shape)
 
-classe1= dataset_reshaped_complete[labels == 0]
-classe2= dataset_reshaped_complete[labels == 1]
+classe1 = dataset_reshaped_complete[labels == 0, :]
+classe2 = dataset_reshaped_complete[labels == 1, :]
 
-print(classe1.shape)
+# classe1 = np.dot(classe1,Tr)
+# classe2 = np.dot(classe2,Tr)
 
-# classe1 = np.dot(classe1.T,Tr)
-# classe2 = np.dot(classe2.T,Tr)
-
-# print(classe1.shape)
-# # print(classe2.shape)                          
+print("Classe1.shape: ", classe1.shape)
+# print(classe2.shape)                          
 
 # m1 = np.mean(classe1, axis=0)
 # m2 = np.mean(classe2, axis=0)
