@@ -2,9 +2,10 @@ import cv2
 from os import listdir
 from os.path import isfile, join
 import numpy as np
-def upload_dataset(PATH, age, operator):
+from matplotlib import pyplot as plt
 
-    image = []
+
+def upload_dataset(PATH, age, operator):
 
     filename_images = [f for f in listdir(PATH) if isfile(join(PATH, f))]
 
@@ -24,12 +25,15 @@ def upload_dataset(PATH, age, operator):
         elif int(filename[index:index+2]) <= age:
                 dataset.append((cv2.imread(path_image, cv2.IMREAD_GRAYSCALE)))
                 labels.append(1)
-
+    
     len_dataset = len(dataset) 
     row,col = dataset[0].shape
-    print(col,row)
-    dataset_reshaped = np.zeros((row*col,len_dataset))
+
+    print(row,col)
+
+    dataset_reshaped = np.zeros((row * col,len_dataset))
     for i in range(len_dataset):
         dataset_reshaped[:,i] = np.reshape(dataset[i], row*col)
+
 
     return dataset_reshaped, np.array(labels)
