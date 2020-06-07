@@ -66,54 +66,107 @@ def pca(age,operator):
     print("N: ", N)
     # 3f. Proietto i dati utilizzando gli N autovettori più grandi
     Tr = best_U[:,:N]
-    XT = np.dot(Xc.T, Tr)
+    XT = Tr.T.dot(Xc)
     print(XT.shape)
 
-    return Tr,XT
+    return Tr, XT, dataset_reshaped, media
     
 
-xtr1,xt1 = pca(50, 'greater')
-xtr2,xt2 = pca(5, 'cazzo')
+matrix_tr_elder, features_elder, dataset_reshaped_elder, mean_elder = pca(50, 'greater')
+matrix_tr_young, features_young, dataset_reshaped_young, mean_young = pca(5, 'cazzo')
 
-# elderly_mean = np.mean(xt1,axis = 0)
-# print(elderly_mean.shape)
-# # print(elderly_mean)
-
-# young_mean = np.mean(xt2,axis = 0)
-# print(young_mean.shape)
-# # print(young_mean)
+dataset_reshaped_young = dataset_reshaped_young - mean_elder[:,np.newaxis]
+features_young = matrix_tr_elder.T.dot(dataset_reshaped_young)
 
 
-# image_elder = cv2.imread('train/face-a/00001A02.jpg',cv2.IMREAD_GRAYSCALE)
-# row, col = image_elder.shape
 
-# image_reshaped = np.zeros((row*col))
-# image_reshaped = np.reshape(image_elder, row*col)
-
-# image_reshaped_tmp = np.dot(image_reshaped.T,xtr1)
-
-# distance1 = elderly_mean - image_reshaped_tmp
-
-# image_reshaped_tmp2 = np.dot(image_reshaped.T,xtr2)
-# distance2 = young_mean - image_reshaped_tmp2
-
-# error1 = np.sum(distance1)
-# error2 = np.sum(distance2)
-
-# print(error1 > error2)
-
-
-for i in range(xt1.shape[0]):
-        x = np.arange(xt1.shape[1])
-        y = xt1[i,:]
-        plt.scatter(x,y,c = 'r')
-
-for i in range(xt2.shape[0]):
-        x = np.arange(xt2.shape[1])
-        y = xt2[i,:]
+for i in range(features_young.shape[0]):
+        x = np.arange(features_young.shape[1])
+        y = features_young[i,:]
         plt.scatter(x,y,c = 'b')
 
+for i in range(features_elder.shape[0]):
+        x = np.arange(features_elder.shape[1])
+        y = features_elder[i,:]
+        plt.scatter(x,y,c = 'r')
+
 plt.show()
+
+
+# len_features_young = features_young.shape[0]
+# len_features_elder = features_elder.shape[0]
+
+# # len_bucket = max(len_features_young,len_features_elder) 
+
+# bucket_young = np.zeros((2,len_features_young))
+# bucket_elder = np.zeros((2,len_features_elder))
+
+# for i in range(len_features_young):
+#     bucket_young[0,i] = np.max(features_young[i,:])
+#     bucket_young[1,i] = np.max(features_young[i,:])
+
+# for i in range(len_features_elder):
+#     bucket_elder[0,i] = np.max(features_elder[i,:])
+#     bucket_elder[1,i] = np.max(features_elder[i,:])
+
+
+# dataset_elder = dataset_reshaped_elder[:,:20]
+# dataset_test = dataset_test - mean_elder[:,np.newaxis]
+
+# dataset_test = matrix_tr_elder.T.dot(dataset_test)
+
+
+
+
+
+
+# '''
+
+# Calcolo soglia e distanze ...
+
+# '''
+# from scipy.spatial.distance import cdist 
+
+# theta_elder = np.max(cdist(matrix_tr_elder.T, matrix_tr_elder.T, 'euclidean'))
+# theta_young = np.max(cdist(matrix_tr_young.T, matrix_tr_young.T, 'euclidean'))
+
+# # 5. Centro i miei dati di test
+
+# test_data = dataset_reshaped_elder[:,:40]
+
+# x_te = test_data -  mean_elder[:,np.newaxis]
+# omega_te = matrix_tr_elder.T.dot(x_te)
+
+# # 6. Calcolo il set di distanze epsilon
+# epsilon = []
+# for i in range(40):
+#   tmp_test = omega_te[:,i]
+#   epsilon.append(np.sqrt(np.linalg.norm(tmp_test[:,np.newaxis] - features_elder, ord=2, axis=0)))
+# epsilon = np.array(epsilon)
+
+# # 7. Ricostruisco le facce e faccio un imshow dell'originale rispetto a quella ricostruita delle prime 5 immagini!
+
+# g = matrix_tr_elder.dot(omega_te)
+
+# # 8. Calcolo xi per la classificazione
+
+# xi  = np.sqrt(np.linalg.norm(g-x_te,ord=2, axis=0))
+
+# #9. In quale dei 3 casi ci troviamo per ogni faccia di test? La faccia corrispondente è della stessa persona? Fare un check delle prime 5 facce
+# fig,axs = plt.subplots(5,2)
+# for i in range(5):
+#   if xi[i] >= theta_elder:
+#     print(str(i+1) + ": Non è una faccia!")
+#   elif xi[i] < theta_elder and any(epsilon[i,:]>theta_elder):
+#     print(str(i+1) + ": E' una nuova faccia!")
+#   elif xi[i] < theta_elder and np.min(epsilon[i,:]) < theta_elder:
+#     print(str(i+1) + ": E' una faccia conosciuta! Ora la mostro!")
+#     matched_indx = np.argmin(epsilon[i,:])
+    
+
+
+
+
 
 
 
