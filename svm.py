@@ -2,50 +2,68 @@ from sklearn.svm import SVC
 from upload_dataset import upload_dataset
 from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
+
+from reshape import reshape
+
 import numpy as np
 import cv2
 
-from feature_exctraction.resnet import FeaturesExtractor
+
+test = []
+test.append(cv2.resize(cv2.imread('train/8.jpg', 0), (200,200)))
+test.append(cv2.resize(cv2.imread('train/6.jpg', 0), (200,200)))
+
+test_reshaped = reshape(test, 200, 200, len(test))
+
+test_reshaped = test_reshaped.T
+
+test_labels = np.array([0, 1])
+
 
 # Inizializzo i parametri
-
-kernel = 'sigmoid'
-max_iteration = 1
+kernel = 'rbf'
+max_iteration = 1000
 
 # Inizializzo il modello di classificazione SVM
 
-dataset, labels = upload_dataset('train/face-a/', 20, 'minor')
+dataset_0, labels_0 = upload_dataset('train/faces/0/', 2)
 
-x_train = dataset[:,:4000]
-y_train = labels[:4000]
+dataset_6, labels_6 = upload_dataset('train/faces/6/', 100)
 
-x_test = dataset[:,4000:5000]
-y_test = labels[4000:5000]
+training_size = 800
+
+x_train = dataset_0[:training_size] + dataset_6[:training_size]
+y_train = np.array(labels_0[:training_size] + labels_6[:training_size])
+
+x_test = dataset_0[training_size:] + dataset_6[training_size:] 
+y_test = np.array(labels_0[training_size:] + labels_6[training_size:])
+
+row,col = 200, 200
+
+x_train_reshaped = reshape(x_train, row, col, len(x_train))
+x_test_reshaped = reshape(x_test, row, col, len(x_test))
+
+x_train_reshaped = x_train_reshaped.T
+x_test_reshaped = x_test_reshaped.T
 
 
-x_train = x_train.T
-x_test = x_test.T
-# for i in range(2):
-#     image = x_train[: , i].reshape((200,200))
-#     plt.imshow(image, cmap='gray')
-#     plt.show()
+x_vecchi = x_train_reshaped[y_train == 1 , : ]
+x_giovani = x_train_reshaped[y_train == 0 , : ]
 
+print("Train vecchi: ", x_train_reshaped[y_train == 1, :].shape[0])
+print("Train giovani: ", x_train_reshaped[y_train == 0 ,:].shape[0])
 
-# x_vecchi = x_train[:,y_train == 0]
-# x_giovani = x_train[:,y_train == 1]
-
-# plt.scatter(np.arange(x_vecchi.shape[0]), x_vecchi[:,0], c = 'r')
-# plt.scatter(np.arange(x_giovani.shape[0]), x_giovani[:,1], c = 'b')
-# plt.show()
+print("Test, vecchi: ", x_test_reshaped[y_test == 1, :].shape[0])
+print("Test giovani: ", x_test_reshaped[y_test == 0 ,:].shape[0])
 
 model = SVC(kernel=kernel, max_iter=max_iteration) 
-model.fit(x_train, y_train)
+model.fit(x_train_reshaped, y_train)
 
 cmc = np.zeros((2,2))
 
-predicted = model.predict(x_test)
+predicted = model.predict(test_reshaped)
 
-for pr,y_te in zip(predicted,y_test):
+for pr,y_te in zip(predicted,test_labels):
   cmc[y_te,pr] += 1.0
 
 print(cmc)
@@ -53,8 +71,8 @@ print(cmc)
 plt.imshow(cmc)
 plt.colorbar()
 plt.xlabel("Predicted")
-plt.xticks([0,1],["6","9"])
-plt.yticks([0,1],["6","9"])
+plt.xticks([0,1],["Giovani","Vecchi"])
+plt.yticks([0,1],["Giovani","Vecchi"])
 plt.ylabel("Real")
 plt.show()
 

@@ -1,3 +1,6 @@
 __pycache__/
 train/
 .vscode/
+image-example/
+dataset/
+cose_non_funzionanti/

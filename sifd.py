@@ -51,4 +51,3 @@ def single_image_face_detection(image_path,save_directory,images_directory,image
         #print("[INFO] Image faces_detected.jpg written to filesystem: ", status)
 
         image_count += 1
-
