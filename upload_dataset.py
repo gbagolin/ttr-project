@@ -4,7 +4,7 @@ from os.path import isfile, join
 import numpy as np
 
 
-def upload_dataset(PATH, age, N = None):
+def upload_dataset(PATH, label, N = None):
 
     filename_images = [f for f in listdir(PATH) if isfile(join(PATH, f))]
 
@@ -19,11 +19,7 @@ def upload_dataset(PATH, age, N = None):
 
         face_age = int(filename[index:index+2])
 
-        if face_age >= age:
-                labels.append(0)
- 
-        elif face_age <= age:
-                labels.append(1)
+        labels.append(label)
 
         if N != None and len(dataset) == N: 
             break 

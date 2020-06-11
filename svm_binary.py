@@ -26,9 +26,9 @@ max_iteration = 1000
 
 # Inizializzo il modello di classificazione SVM
 
-dataset_0, labels_0 = upload_dataset('train/faces/0/', 2)
+dataset_0, labels_0 = upload_dataset('train/faces/0/', 0)
 
-dataset_6, labels_6 = upload_dataset('train/faces/6/', 100)
+dataset_6, labels_6 = upload_dataset('train/faces/6/', 1)
 
 training_size = 800
 
