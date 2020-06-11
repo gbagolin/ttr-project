@@ -4,25 +4,26 @@ from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 
 from reshape import reshape
+from pca import pca
 
 import numpy as np
 import cv2
 
 
-test = []
-test.append(cv2.resize(cv2.imread('train/8.jpg', 0), (200,200)))
-test.append(cv2.resize(cv2.imread('train/6.jpg', 0), (200,200)))
+# test = []
+# test.append(cv2.resize(cv2.imread('train/8.jpg', 0), (200,200)))
+# test.append(cv2.resize(cv2.imread('train/6.jpg', 0), (200,200)))
 
-test_reshaped = reshape(test, 200, 200, len(test))
+# test_reshaped = reshape(test, 200, 200, len(test))
 
-test_reshaped = test_reshaped.T
+# test_reshaped = test_reshaped.T
 
-test_labels = np.array([0, 1])
+# test_labels = np.array([0, 1])
 
 
 # Inizializzo i parametri
 kernel = 'rbf'
-max_iteration = 1000
+max_iteration = 1
 
 # Inizializzo il modello di classificazione SVM
 
@@ -43,6 +44,13 @@ row,col = 200, 200
 x_train_reshaped = reshape(x_train, row, col, len(x_train))
 x_test_reshaped = reshape(x_test, row, col, len(x_test))
 
+# matrix_x_train, x_train_reshaped, _ , mean_x_train = pca(x_train_reshaped)
+
+# x_test_reshaped = x_test_reshaped - mean_x_train[:,np.newaxis]
+# x_test_reshaped = matrix_x_train.T.dot(x_test_reshaped)
+
+# print("PCA done!")
+
 x_train_reshaped = x_train_reshaped.T
 x_test_reshaped = x_test_reshaped.T
 
@@ -61,9 +69,9 @@ model.fit(x_train_reshaped, y_train)
 
 cmc = np.zeros((2,2))
 
-predicted = model.predict(test_reshaped)
+predicted = model.predict(x_test_reshaped)
 
-for pr,y_te in zip(predicted,test_labels):
+for pr,y_te in zip(predicted,y_test):
   cmc[y_te,pr] += 1.0
 
 print(cmc)

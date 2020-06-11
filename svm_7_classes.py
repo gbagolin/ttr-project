@@ -11,30 +11,19 @@ import cv2
 
 
 # Inizializzo i parametri
-kernel = 'poly'
-max_iteration = 100
-NUM_CLASSES = 4
+kernel = 'rbf'
+max_iteration = 10**4
+NUM_CLASSES = 7
 
 # Inizializzo il modello di classificazione SVM
-
 dataset = [] 
 labels = []
 
-for i in range(7): 
+for i in range(NUM_CLASSES): 
     tmp_dataset, tmp_labels = upload_dataset('train/faces/{0}/'.format(i), i)
     dataset.append(tmp_dataset)
     labels.append(tmp_labels)
 
-for list in labels:
-    for i in range(len(list)):
-        if list[i] == 0 or list[i] == 1: 
-            list[i] = 0
-        elif list[i] == 2 or list[i] == 3:
-            list[i] = 1
-        elif list[i] == 4 or list[i] == 5: 
-            list[i] = 2 
-        else: 
-            list[i] = 3
 
 training_size = 800
 
@@ -43,7 +32,7 @@ y_train = []
 x_test = []
 y_test = []
 
-for i in range(7): 
+for i in range(NUM_CLASSES): 
     x_train += (dataset[i])[:training_size]
     y_train += (labels[i])[:training_size]
     x_test += (dataset[i])[training_size:]
@@ -59,14 +48,14 @@ x_train_reshaped = reshape(x_train, row, col, len(x_train))
 x_test_reshaped = reshape(x_test, row, col, len(x_test))
 
 print(x_train_reshaped.shape,x_test_reshaped.shape)
-print(len(y_train),len(y_test))
+print(y_train,y_test)
 
-# matrix_x_train, x_train_reshaped, _ , mean_x_train = pca(x_train_reshaped)
+matrix_x_train, x_train_reshaped, _ , mean_x_train = pca(x_train_reshaped)
 
-# x_test_reshaped = x_test_reshaped - mean_x_train[:,np.newaxis]
-# x_test_reshaped = matrix_x_train.T.dot(x_test_reshaped)
+x_test_reshaped = x_test_reshaped - mean_x_train[:,np.newaxis]
+x_test_reshaped = matrix_x_train.T.dot(x_test_reshaped)
 
-# print("PCA done!")
+print("PCA done!")
 
 x_train_reshaped = x_train_reshaped.T
 x_test_reshaped = x_test_reshaped.T
@@ -98,8 +87,8 @@ for pr,y_te in zip(predicted,y_test):
 plt.imshow(cmc)
 plt.colorbar()
 plt.xlabel("Predicted")
-plt.xticks([0,1,2,3],["0","1","2","3"])
-plt.yticks([0,1,2,3], ["0","1","2","3"])
+plt.xticks([0,1,2,3,4,5,6],["0","1","2","3","4","5","6"])
+plt.yticks([0,1,2,3,4,5,6], ["0","1","2","3","4","5","6"])
 plt.ylabel("Real")
 
 accuracy = np.sum(cmc.diagonal())/np.sum(cmc)
