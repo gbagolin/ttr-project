@@ -12,7 +12,7 @@ import cv2
 
 # Inizializzo i parametri
 kernel = 'rbf'
-max_iteration = 10**4
+max_iteration = 100
 NUM_CLASSES = 7
 
 # Inizializzo il modello di classificazione SVM
@@ -49,6 +49,20 @@ x_test_reshaped = reshape(x_test, row, col, len(x_test))
 
 print(x_train_reshaped.shape,x_test_reshaped.shape)
 print(y_train,y_test)
+
+counts = np.zeros(7)
+
+for e in y_train: 
+    counts[e] += 1
+
+print(counts)
+
+counts = np.zeros(7)
+
+for e in y_test: 
+    counts[e] += 1
+
+print(counts)
 
 matrix_x_train, x_train_reshaped, _ , mean_x_train = pca(x_train_reshaped)
 
