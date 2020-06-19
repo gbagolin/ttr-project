@@ -15,7 +15,7 @@ def upload_dataset(PATH, label, N = None):
         
         path_image = PATH + filename
         # index = filename.find('A') + 1
-        dataset.append(cv2.resize(cv2.imread(path_image,0), (200,200)))
+        dataset.append(cv2.resize(cv2.imread(path_image), (200,200)))
 
         # face_age = int(filename[index:index+2])
 
