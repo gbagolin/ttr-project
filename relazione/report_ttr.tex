@@ -1,0 +1,77 @@
+\documentclass[12pt]{IEEEtran}
+
+
+\title{
+Age Detection \\
+
+\large Laurea Magistrale in Scienze e Ingegneria Informatica AA2019/2020\\
+\large Teorie e Tecniche del Riconoscimento}
+\author{Giovanni Bagolin - VR445681\\Andrei Tsoi -VR446397}
+
+\usepackage{graphicx}
+\usepackage[italian]{babel}
+
+\begin{document}
+\maketitle
+
+\begin {abstract}
+Il progetto di Age Detection si occupa di stimare l'età di un individuo attribuendola ad una fascia ben definita.\\
+Il progetto è sviluppato su più livelli dove ognuno dei quali si occupa di fasce d'eta differenti:
+\begin{itemize}
+\item  Binary Age Detection: il classificatore permette di distinguere solamente due fasce d'età, utilizzato per verificare se un individuo può essere categorizzato come giovane o come anziano.
+\item Ternary Age Detection: il classificatore permette di distinguere tre fasce d'età, rispettivamente giovane, adulto e anziano.
+\item Multiclass Age Detection: il classificatore permette di distinguere molteplici fasce d'età che vanno da decade in decade, tuttavia questo tipo di classificatore non è stato implementato correttamente in quanto necessita di analisi biometriche avanzate.
+\end{itemize}
+\end{abstract}
+
+\section{Motivation  and Rationale}
+L'age detection degli individui è utile in molteplici campi che vanno dall'analisi demografica della popolazione alla distinzione di interessi di varie fasce d'eta nelle loro abitudini quotidiane.\\
+L'analisi demografica della popolazione permette di stimare l'età media di uno stato, regione o città. Grazie all'analisi demografica si ottengono informazioni sulla struttura di una popolazione: suddividendo la popolazione in fasce d'eta, in base alle proporzioni tra queste fasce la struttura della popolazione può essere descritta come progressiva (maggioranza di popolazione giovane),  regressiva(maggioranza di popolazione anziana) o stazionaria (equivalenza tra popolazioni giovane e anziane).\\
+Un'altro campo in cui  l'age detection può essere utile è stimare le abitudini degli individui di un gruppo sociale. L'affluenza di una certa categoria di persone in dato luogo (come un negozio, centro commerciale) o evento(come feste, raduni, fiere) può descrivere gli interessi di ogni fascia d'età. Questa analisi può successivamente tornare utile per fini economici e sociali come per esempio pubblicità mirate, organizzazione di eventi in determinati modi per attrarre determinate fasce d'età, vendita di oggetti mirati a fasce d'età (videogiochi, accessori auto, sedie a rotelle, bare).  
+
+\section{Objectives}
+Gli obiettivi si concentrano nella progettazione e modellazione di uno strumento che possa distinguere individui sulla base della loro età. Andando nel dettaglio gli obiettivi di un Binary Age Detection si concentrano nell'individuazione e separazione delle feature che possano aiutare a discriminare un giovane da un anziano, tale obiettivo è il più semplice da raggiungere ed anche il più preciso nell'esecuzione del discriminatore(come si vedrà nelle sezioni successive) in quanto le features sono meglio separabili.\\
+Più complicato è il raggiungimento degli obiettivi di un Ternary Age Detection: a differenza del classificatore binario, in quello ternario si devono individuare features che possano distinguere tre tipologie di persone (giovani, adulte ed anziane), pertanto molte features possono essere in comune, rendendo più complicata e meno efficiente la discriminazione tra fasce d'età.\\
+Il Multiclass Age Detection risulta essere in assoluto il più complicato da realizzare: gli obiettivi di un classificatore di questo tipo sono quelli di distinguere fasce d'eta vicine tra loro (ad esempio distinguere un trentenne da un quarantenne). Tale obiettivi sono difficili da ottenere in quanto le feature discriminatorie sono sempre meno cosi come la dimensione del dataset utilizzato per il training. \\ 
+
+\section{Methodology}
+
+In questa sezione viene descritto tutto il procedimento, ed \`e dunque la sezione pi\`u importante del report. Va descritto passo passo quello che avete fatto, facendo capire ``esattamente'' cosa \`e stato fatto.
+
+Questa sezione pu\`o essere divisa in sottosezioni. Le informazioni riportate nella lista seguente dovrebbero essere identificabili nel testo del report (\textbf{anche in ordine diverso}):
+\begin{itemize}
+\item Definizione dell-architettura del programma
+\item Descrizione del componente di HW digitale.
+\item Processo di ``sintesi'' verso RTL. Definizione dei sottocomponenti del componente HW, e della sua struttura. Definizione dell'interfaccia RTL, definizione della Macchina a Stati Finiti Estesa (EFSM) del componente e dei sottocomponenti. Realizzazione del componente HW utilizzando i processi in diversi stili a livello RTL. \`E inoltre possibile discutere la scelta dei tipi di dato.
+%\item Descrizione della realizzazione della parte rappresentante SW Embedded, e descritta in TLM.
+%\item Descrizione della realizzazione della parte a tempo continuo. Spiegazione delle scelte progettuali fatte per gli stili di modellazione utilizzati.
+\item Descrizione dei meccanismi di comunicazione tra le diverse parti del sistema.
+\end{itemize}
+
+\textbf{In questa sezione deve essere riportato (brevemente) anche l'organizzazione dell'implementazione consegnata assieme al report.}
+
+\section{Experiments and Results}
+
+Qua vanno ``messi i numeri''. Questa sezione dovrebbe contenere i risultati della simulazione. La simulazione mostra che il sistema funziona correttamente? Come \`e stato provato? Che tipo di testbench sono stati utilizzati? Come \`e stato scomposto il sistema per verificarne la correttezza?
+
+Per quanto riguarda le performance:
+\begin{itemize}
+\item cosa si pu\`o dire in merito alla latenza?
+\item Qual è la frequenza massima del design? 
+\item Qual è l'area occupata dal design? 
+\end{itemize}
+
+Questa sezione pu\`o contenere anche riflessioni personali sui risultati ottenuti. Importante: tutte le affermazioni devono essere supportate da numeri\footnote{Richard Feynman on Scientific Method (1964) -\\ https://www.youtube.com/watch?v=OL6-x0modwY}.
+
+\section{Conclusions}
+Le conclusioni dovrebbero riassumere in poche righe  tutto ci\`o che \`e stato fatto. Un paio di righe descrivono i risultati osservati, in modo da introdurre poi la conclusione ``vera e propria''. Nel caso del corso, la ``lezione da portare a casa'' sar\`a quello che si \`e imparato svolgendo l'elaborato.
+
+
+
+\bibliography{biblio}
+
+\appendix
+Se non avete abbastanza spazio, potete inserire le figure delle EFSM in una  pagina extra, appendice. Un esempio di come potete fare solo le Figure~\ref{fig:grande}, \ref{fig:piccola1}, \ref{fig:piccola2}.
+
+
+\end{document}
