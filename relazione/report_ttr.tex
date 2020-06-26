@@ -35,20 +35,48 @@ Più complicato è il raggiungimento degli obiettivi di un Ternary Age Detection
 Il Multiclass Age Detection risulta essere in assoluto il più complicato da realizzare: gli obiettivi di un classificatore di questo tipo sono quelli di distinguere fasce d'eta vicine tra loro (ad esempio distinguere un trentenne da un quarantenne). Tale obiettivi sono difficili da ottenere in quanto le feature discriminatorie sono sempre meno cosi come la dimensione del dataset utilizzato per il training. \\ 
 
 \section{Methodology}
-
-In questa sezione viene descritto tutto il procedimento, ed \`e dunque la sezione pi\`u importante del report. Va descritto passo passo quello che avete fatto, facendo capire ``esattamente'' cosa \`e stato fatto.
-
-Questa sezione pu\`o essere divisa in sottosezioni. Le informazioni riportate nella lista seguente dovrebbero essere identificabili nel testo del report (\textbf{anche in ordine diverso}):
+\subsection{Dataset}
+Il dataset è strutturato in sette classi, dove ogni classe rappresenta una fascia d'età contenente 974 immagini: 
 \begin{itemize}
-\item Definizione dell-architettura del programma
-\item Descrizione del componente di HW digitale.
-\item Processo di ``sintesi'' verso RTL. Definizione dei sottocomponenti del componente HW, e della sua struttura. Definizione dell'interfaccia RTL, definizione della Macchina a Stati Finiti Estesa (EFSM) del componente e dei sottocomponenti. Realizzazione del componente HW utilizzando i processi in diversi stili a livello RTL. \`E inoltre possibile discutere la scelta dei tipi di dato.
-%\item Descrizione della realizzazione della parte rappresentante SW Embedded, e descritta in TLM.
-%\item Descrizione della realizzazione della parte a tempo continuo. Spiegazione delle scelte progettuali fatte per gli stili di modellazione utilizzati.
-\item Descrizione dei meccanismi di comunicazione tra le diverse parti del sistema.
+    \item Classe 0: Rappresenta i bambini dai 2 ai 9 anni. 
+    \item Classe 1: Rappresenta i ragazzi dai 10 ai 19 anni. 
+    \item Classe 2: Rappresenta gli adulti dai 20 ai 29 anni.
+    \item Classe 3: Rappresenta gli adulti dai 30 ai 39 anni. 
+    \item Classe 4: Rappresenta gli adulti dai 40 ai 49 anni.
+    \item Classe 5: Rappresenta gli adulti dai 50 ai 59 anni.
+    \item Classe 6: Rappresenta gli anziani dai 60 in poi. \\
+\end{itemize} 
+Per avere la massima rappresentatività di ogni dato, attraverso un algoritmo di face-detection, si è estratta la faccia, di conseguenza si è ridotto al minimo il rumore (come lo sfondo e le altre componenti del corpo) che avrebbe influenzato in negativo la classificazione. Ogni dato appartenente al dataset rappresenta esclusivamente una faccia. \\
+Per il Binary Age Detection, si è scelto di utilizzare la classe 6 per gli anziani in confronto ad una qualsiasi delle altre classi.\\
+Nel caso del classificatore ternario, le classi utilizzate sono: la classe 0 per rappresentare i giovani, la classe 3 per gli adulti, e la classe 6 per gli anziani. 
+Tali classi sono state scelte in quanto riescono a distanziarsi il più possibile in termini di features, l'una dall'altra, potendo aver quindi una classificazione più precisa e di conseguenza migliore. \\
+Il Multiclass Age Detection è stato implementato in due versioni. Nella prima versione sono state utilizzate quattro classi partizionate in modo opportuno: 
+\begin{itemize}
+    \item Classe 0: la classe rimane invariata. 
+    \item Classe 1: è composta dalla metà più vecchia della classe 2 più la metà più giovane della classe 3. 
+    \item Classe 2: contiene la metà più vecchia della classe 4 più la metà più giovane della classe 5. 
+    \item Classe 3: la classe rimane invariata. \\ 
+\end{itemize}
+\newpage
+La seconda versione utilizza tutte le classi del dataset, nella quale si otterrebbe un Age Detection ideale, ovvero che possa rilevare il più basso range d'età al quale una persona può appartenere. Tuttavia, i risultati ottenuti con quest'ultimo, non rispecchiano questa idea. 
+\subsection{Suddivisione Dataset in Training Set e Testing Set}
+Un classificatore necessita di una fase di addestramento, la quale deve essere fatta su di un'ampia quantità di dati, il training set. Avendo quindi una quantità limitata di dati, occorre partizionare il dataset in maniera opportuna. Tale partizionamento è rappresentato dal 90\% del dataset come training set, e il restante 10\% come testing. Questi valori si possono modificare dando maggiore priorità al testing, ma penalizzando la fase di training, e quindi penalizzando l'accuratezza totale del classificatore. 
+\subsection{Analisi e Ridimensionalità delle Features}
+I vari classificatori utilizzano varie versioni del dataset, con opportune ridimensionalità delle features. \\
+Tali ridimensionalità sono necessarie per incrementare le performance dei classificatori. 
+Le tecniche di ridimensionalità utilizzate sono: 
+\begin{itemize}
+    \item Nessuna ridimensionalità: al classificatore viene passato il dataset, dove ogni dato ha una dimensionalità di 40.000 features (il dato è un'immagine 200x200 in scala di grigi).
+    \item Principal Components Analysis: il dataset viene ridimensionato sulla base delle sue componenti principali, la quantità di tali componenti viene arbitrariamente assegnata. Si fa notare che vi è un cambiamento in termini di ordini di grandezze rispetto alla dimensionalità originale. 
+    \item Features Extractor: il dataset viene ridimensionato utilizzando l'estrattore delle features fornito in laboratorio. Tale estrattore si basa su una rete neurale, quindi l'estrazione risulterà essere lenta, ottenendo un guadagno prestazionale solamente durante la fase di addestramento e di classificazione. Questo estrattore, restituisce 2048 features per ogni immagine. \\
 \end{itemize}
 
-\textbf{In questa sezione deve essere riportato (brevemente) anche l'organizzazione dell'implementazione consegnata assieme al report.}
+\subsection{Tecniche di classificazione}
+Per il problema di classificazione binaria, inizialmente, si è pensato di utilizzare un classificatore di Bayes, ma le features che rappresentano giovani e anziani non sono risultate linearmente separabili anche riducendo la dimensionalità delle features. Pertanto, l'approccio al problema è stato cambiato, provando altri classificatori come Support Vector Machine e K-Nearest-Neighbor. \\
+Il classificatore Support Vector Machine risulta essere ideale per questa tipologia di problemi, in quanto è in grado di separare le features (anche non linearmente separabili), mappandole in altri spazi attraverso opportuni kernel. In aggiunta vengono utilizzate  delle variabili slack, che insieme ad un parametro di costo C, consentono di oltrepassare l'iperpiano di separazione andando ad esplorare ulteriori features eventualmente, migliorando la classificazione. \\
+Un altro classificatore utilizzato è il K-Nearest-Neighbor, tuttavia, risulta essere meno preciso rispetto al Support Vector Machine. \\
+Tale carenza di precisione è derivata dal fatto che il K-Nearest-Neighbor non mappa le features in altri spazi, ma per ogni feature appartenente ai dati di test ne analizza solamente l'intorno (composto da K features di addestramento vicine alla feature di test analizzata).Il risultato dell'analisi permette di classificare la feature, in base alla classe che si presenta più frequentemente nell'intorno. 
+
 
 \section{Experiments and Results}
 
