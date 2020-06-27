@@ -8,6 +8,7 @@ Age Detection \\
 \large Teorie e Tecniche del Riconoscimento}
 \author{Giovanni Bagolin - VR445681\\Andrei Tsoi -VR446397}
 
+\usepackage{adjustbox}
 \usepackage{graphicx}
 \usepackage[italian]{babel}
 
@@ -79,18 +80,125 @@ Tale carenza di precisione è derivata dal fatto che il K-Nearest-Neighbor non m
 
 
 \section{Experiments and Results}
-
-Qua vanno ``messi i numeri''. Questa sezione dovrebbe contenere i risultati della simulazione. La simulazione mostra che il sistema funziona correttamente? Come \`e stato provato? Che tipo di testbench sono stati utilizzati? Come \`e stato scomposto il sistema per verificarne la correttezza?
-
-Per quanto riguarda le performance:
+\subsection{Binary Age Detection - SVM}
+Per quanto riguarda l'utilizzo del classificatore SVM, sono state realizzate tre versioni, rispettivamente: 
 \begin{itemize}
-\item cosa si pu\`o dire in merito alla latenza?
-\item Qual è la frequenza massima del design? 
-\item Qual è l'area occupata dal design? 
-\end{itemize}
-
-Questa sezione pu\`o contenere anche riflessioni personali sui risultati ottenuti. Importante: tutte le affermazioni devono essere supportate da numeri\footnote{Richard Feynman on Scientific Method (1964) -\\ https://www.youtube.com/watch?v=OL6-x0modwY}.
-
+    \item Classificatore con dati senza nessuna ridimensionalità. 
+    \begin{table}[h]
+    \caption {Accuratezza, Recall e Precisione al variare del numero di iterazioni} \label{tab:title} 
+       \begin{adjustbox}{width=\columnwidth}
+        \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \# Iterazioni      & 1 & 10 & 100 & 1.000 \\ \hline
+        Accuratezza        &65.13\% &63.08\% &78.97\%  &89.74\%       \\ \hline
+        Recall Classe 0    &80\%    &78\%    &66\%     &89\%       \\ \hline
+        Recall Classe 6    &51\%    &48\%    &92\%     &91\%       \\ \hline
+        Precision Classe 0 &62\%    &60\%    &89\%     &91\%       \\ \hline
+        Precision Classe 6 &71\%    &68\%    &73\%     &89\%       \\ \hline
+        \end{tabular}
+        \end{adjustbox}
+        \end{table} \newpage
+        \begin{table}[h!]
+        \caption {Accuratezza al variare del kernel addottato}
+        \begin{adjustbox}{width=\columnwidth}
+        \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Kernel      & Linear  & Poly    & RBF     & Sigmoid \\ \hline
+        Accuratezza & 93.85\% & 94.36\% & 89.74\% & 49.74\% \\ \hline
+        \end{tabular}
+        \end{adjustbox}
+        \end{table}
+        \item Classificatore con dati ridimensionati con PCA. 
+        \begin{table}[h]
+    \caption {Accuratezza, Recall e Precisione al variare del numero di iterazioni} \label{tab:title} 
+       \begin{adjustbox}{width=\columnwidth}
+        \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \# Iterazioni      & 1 & 10 & 100 & 1.000 \\ \hline
+        Accuratezza        &62.05\% &59.49\% &83.08\%  &92.31\%       \\ \hline
+        Recall Classe 0    &79\%    &76\%    &71\%     &89\%       \\ \hline
+        Recall Classe 6    &45\%    &43\%    &95\%     &91\%       \\ \hline
+        Precision Classe 0 &59\%    &57\%    &93\%     &91\%       \\ \hline
+        Precision Classe 6 &68\%    &64\%    &77\%     &89\%       \\ \hline
+        \end{tabular}
+        \end{adjustbox}
+        \end{table} 
+        \begin{table}[h!]
+        \caption {Accuratezza al variare del kernel addottato}
+        \begin{adjustbox}{width=\columnwidth}
+        \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Kernel      & Linear  & Poly    & RBF     & Sigmoid \\ \hline
+        Accuratezza & 93.85\% & 85.13\% & 92.31\% & 69.74\% \\ \hline
+        \end{tabular}
+        \end{adjustbox}
+        \end{table}
+        \item Classificatore ridimensionato con Feature Extractor con rete neurale. 
+        \begin{table}[h]
+    \caption {Accuratezza, Recall e Precisione al variare del numero di iterazioni} \label{tab:title} 
+       \begin{adjustbox}{width=\columnwidth}
+        \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \# Iterazioni      & 1 & 10 & 100 & 1.000 \\ \hline
+        Accuratezza        &58.97\% &72.82\% &81.03\%  &89.23\%       \\ \hline
+        Recall Classe 0    &72\%    &59\%    &68\%     &84\%       \\ \hline
+        Recall Classe 6    &45\%    &87\%    &94\%     &95\%       \\ \hline
+        Precision Classe 0 &57\%    &82\%    &92\%     &94\%       \\ \hline
+        Precision Classe 6 &62\%    &68\%    &75\%     &85\%       \\ \hline
+        \end{tabular}
+        \end{adjustbox}
+        \end{table} 
+        \begin{table}[h!]
+        \caption {Accuratezza al variare del kernel addottato}
+        \begin{adjustbox}{width=\columnwidth}
+        \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Kernel      & Linear  & Poly    & RBF     & Sigmoid \\ \hline
+        Accuratezza & 89.23\% & 88.72\% & 89.23\% & 49.74\% \\ \hline
+        \end{tabular}
+        \end{adjustbox}
+        \end{table}
+        
+    \end{itemize}
+\newpage
+\subsection{Binary Age Detection - KNN}
+Per quanto riguarda l'utilizzo del classificatore KNN, sono state realizzate tre versioni, rispettivamente: \\
+\begin{itemize}
+    \item Classificatore con dati senza nessuna ridimensionalità. 
+        \begin{table}[h!]
+        \caption {Accuratezza al variare del numero di vicini}
+        \begin{adjustbox}{width=\columnwidth}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        \# Vicini      &1  &3    &7  &10    &70  &100\\ \hline
+        Accuratezza & 71\% &72.30\% & 75.89\% &75.89\% & 73\% & 67.69\%  \\ \hline
+        \end{tabular}
+        \end{adjustbox}
+        \end{table}
+        \item Classificatore con dati ridimensionati con PCA. 
+        \begin{table}[h!]
+        \caption {Accuratezza al variare del numero di vicini}
+        \begin{adjustbox}{width=\columnwidth}
+        \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \# Vicini      &3  & 7    & 10     & 70 \\ \hline
+        Accuratezza & 93.85\% & 94.36\% & 89.74\% & 49.74\% \\ \hline
+        \end{tabular}
+        \end{adjustbox}
+        \end{table}
+        \item Classificatore ridimensionato con Feature Extractor con rete neurale. 
+        \begin{table}[h!]
+        \caption {Accuratezza al variare del numero di vicini}
+        \begin{adjustbox}{width=\columnwidth}
+        \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \# Vicini      &3  & 7    & 10     & 70 \\ \hline
+        Accuratezza & 93.85\% & 94.36\% & 89.74\% & 49.74\% \\ \hline
+        \end{tabular}
+        \end{adjustbox}
+        \end{table}
+    \end{itemize}
+    
 \section{Conclusions}
 Le conclusioni dovrebbero riassumere in poche righe  tutto ci\`o che \`e stato fatto. Un paio di righe descrivono i risultati osservati, in modo da introdurre poi la conclusione ``vera e propria''. Nel caso del corso, la ``lezione da portare a casa'' sar\`a quello che si \`e imparato svolgendo l'elaborato.
 
